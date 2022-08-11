@@ -1,0 +1,10 @@
+A B 2
+A D 12
+A C 9
+B D 3
+C D 4
+D E 30
+E F 1
+F G 1
+A AA 5
+A AB 7
