@@ -1,9 +1,11 @@
 from collections import deque 
+import heapq
+
 
 
 class Link():
     def __init__(self, name, dist) -> None:
-        self.dist = dist
+        self.dist = int(dist)
         self.name = name
         self.next = None
 
@@ -47,7 +49,6 @@ class Graph():
             self.adjList.append(None)
 
     def addEdgeHelper(self, n1, n2, dist):
-        self.addNode(n1)
         current = self.adjList[self.map[n1]]
         previous = current
         if current is None:
@@ -144,15 +145,51 @@ class Graph():
                     del unvisited[current.name]
                 current = current.next
 
-    def dijkstra(self, n1):
-        pass
+    def dijkstra(self, root):
+        '''
+        1. Create dijkstra node (need shortDist and parent)
+        2. Initialize pq
+        3. Put all nodes in pq
+        4. pop from pq, iterate all its neighbors, and update short length (and pq) accordingly
+        5. print or store result
+        '''
+
+        # Track each node's shortest dist and parent
+        sp = {node: [float('inf'), None] for node in self.map.keys()}
+        sp[root] = [0, root]
+
+        visited = set()
+
+        # [shortest dist, node name]
+        pq = [(0, root)]
+        heapq.heapify(pq)
+
+        while len(pq) > 0:
+            dist, node= heapq.heappop(pq)
+            if node in visited:
+                continue
+            else:
+                visited.add(node)
+            
+            # for each neighbor, update shortest dist if a shorter one is found
+            vLink = self.adjList[self.map[node]]
+            while vLink:
+                if sp[vLink.name][0] > dist + vLink.dist:
+                    sp[vLink.name] = [dist + vLink.dist, node]
+                    heapq.heappush(pq, (sp[vLink.name][0], vLink.name))
+                vLink = vLink.next
+
+        # print result
+        print("Shortest path from node", root)
+        for node in self.map.keys():
+            print(node, sp[node][0])
 
     def topological(self, n1):
         pass
 
 
 def main3():
-    graph = Graph("graph.txt", "directed")
+    graph = Graph("graph2.txt", "directed")
     graph.printGraph()
     graph.delEdge("A", "D")
     print()
@@ -171,18 +208,20 @@ def main3():
     graph.printGraph()      
 
 def main2():
-    graph = Graph("graph.txta", "directed")
+    graph = Graph("graph2.txt", "directed")
     graph.addEdge("A", "B", 100)
     graph.printGraph()
          
 def main1():
-    graph = Graph("graph.txt")
+    graph = Graph("graph1.txt", "directed")
     graph.printGraph()
-    print()
-    graph.addEdge("A", "B", 100)
-    print()
-    graph.printGraph()
-
+    print(graph.adjList)
+    print("\n")
+    graph.bfs("A")
+    print("\n")
+    graph.dfs("A")
+    print("\n")
+    graph.dijkstra("A")
 
 main1()
 
