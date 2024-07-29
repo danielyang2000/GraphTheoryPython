@@ -3,11 +3,17 @@ from graph import Graph, Link
 
 class TestClass:
 
-    def test_graphInit(self):
+    def test_graphInit1(self):
         g = Graph()
         assert len(g.adjList) == 0
         assert len(g.map) == 0
         assert g.index == 0
+
+    # def test_graphInit2(self):
+    #     g = Graph(type="whatisthis")
+    #     assert len(g.adjList) == 0
+    #     assert len(g.map) == 0
+    #     assert g.index == 0
 
     def test_linkInit(self):
         l = Link("Bob", 100)
@@ -103,6 +109,19 @@ class TestClass:
 
     def test_dijkstra1(self, capsys):
         graph = Graph("graph1.txt", "directed")
+        graph.dijkstra("A")
+        stdout, stderr = capsys.readouterr()
+        out = stdout.split("\n")
+
+        assert out[0] == "Shortest path from node A"
+        assert out[1] == "A 0"
+        assert out[2] == "B 2"
+        assert out[3] == "D 12"
+        assert out[4] == "C 5"
+        assert out[5] == "Z 1"
+
+    def test_dijkstra2(self, capsys):
+        graph = Graph("graph1.txt", "undirected")
         graph.dijkstra("A")
         stdout, stderr = capsys.readouterr()
         out = stdout.split("\n")

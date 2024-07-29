@@ -11,15 +11,21 @@ class Link():
 
 
 class Graph():
+    '''Contains all graph methods'''
+
     def __init__(self, inputFile=None, type="undirected") -> None:
         self.adjList = []
+        '''adjacency list representation. Stores each node's neighbor as link list'''
         self.map = {}
+        '''map node's name to index in adjList'''
         self.index = 0
+        '''Track the index of the new node in adjList'''
         
-        
+        # 
         if type != "undirected" and type != "directed":
             type = "undirected"
-        self.type = type
+        self.type = type 
+        '''graph is either directed or undirected'''
         if inputFile is None:
             return 
         
@@ -34,9 +40,9 @@ class Graph():
         while line:
             tokens = line.split(" ")
             n1, n2, dist = tokens
+            dist = int(dist)
             
             self.addEdge(n1, n2, dist)
-            # self.addEdge(n2, n1, dist)
             
             line = f.readline()
             line = line.strip()
@@ -154,6 +160,10 @@ class Graph():
         5. print or store result
         '''
 
+        if root not in self.map:
+            print(f'Node {root} does not exist in this graph')
+            return 
+
         # Track each node's shortest dist and parent
         sp = {node: [float('inf'), None] for node in self.map.keys()}
         sp[root] = [0, root]
@@ -213,7 +223,7 @@ def main2():
     graph.printGraph()
          
 def main1():
-    graph = Graph("graph1.txt", "directed")
+    graph = Graph("graph1.txt", "undirected")
     graph.printGraph()
     print(graph.adjList)
     print("\n")
